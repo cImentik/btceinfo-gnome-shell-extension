@@ -6,10 +6,21 @@ const Mainloop = imports.mainloop;
 const Clutter = imports.gi.Clutter;
 const PanelMenu = imports.ui.panelMenu;
 
-const BTCE_URL = 'https://btc-e.nz/api/3/ticker/ltc_usd';
+const BTCE_URL = 'https://btc-e.nz/api/3/ticker/ppc_usd';
 
 let _httpSession;
-let _prev = 26.24;
+let _prev = 2.0;
+
+// U+2B61 ^
+// U+2B63
+
+const _Symbols = {
+  error: "\u26a0",
+  refresh: "\u27f3",
+  up: "\u2b61",
+  down: "\u2b63",
+  unchanged: " ",
+};
 
 const BTCeInfoIndicator = new Lang.Class({
   Name: 'BTCeInfoIndicator',
@@ -18,7 +29,7 @@ const BTCeInfoIndicator = new Lang.Class({
   _init: function () {
     this.parent(0.0, "BTCe Info Indicator", false);
     this.buttonText = new St.Label({
-      text: _("Loading..."),
+      text: _(_Symbols.refresh),
       y_align: Clutter.ActorAlign.CENTER,
       // style_class: "indicator"
     });
@@ -50,12 +61,12 @@ const BTCeInfoIndicator = new Lang.Class({
   _refreshUI: function (data) {
     let change = 0.0;
     // if(_prev){
-      change = ((parseFloat(data.ltc_usd.last)-_prev)/_prev)*100;
+      change = ((parseFloat(data.ppc_usd.last)-_prev)/_prev)*100;
     // } else {
       // _prev = parseFloat(data.nmc_usd.last);
     // }
     // global.log(change);
-    let txt = data.ltc_usd.last.toString();
+    let txt = data.ppc_usd.last.toString();
     txt = '$' + txt.substring(0,4) + ' ' + change.toString().substring(0,4)+'%';
     // global.log(txt);
     this.buttonText.set_text(txt);
