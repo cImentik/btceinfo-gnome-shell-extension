@@ -5,11 +5,12 @@ const Lang = imports.lang;
 const Mainloop = imports.mainloop;
 const Clutter = imports.gi.Clutter;
 const PanelMenu = imports.ui.panelMenu;
+const PopupMenu = imports.ui.popupMenu;
 
 const BTCE_URL = 'https://btc-e.nz/api/3/ticker/ppc_usd';
 
 let _httpSession;
-let _prev = 2.0;
+let _prev = 1.92;
 
 // U+2B61 ^
 // U+2B63
@@ -34,6 +35,18 @@ const BTCeInfoIndicator = new Lang.Class({
       // style_class: "indicator"
     });
     this.actor.add_actor(this.buttonText);
+
+    this._popupMenu = new PopupMenu.PopupMenuItem(_('Settings'));
+    this.menu.addMenuItem(this._popupMenu);
+    this._popupMenu.connect('activate', function() {
+      let app_sys = Shell.AppSystem.get_default();
+      let prefs = app_sys.lookup_app('gnome-shell-extension-prefs.desktop');
+      if (prefs.get_state() == prefs.SHELL_APP_STATE_RUNNING)
+        prefs.activate();
+      else
+        prefs.get_app_info().launch_uris(['extension:///' + Extension.metadata.uuid], null);
+    });
+
     this._refresh();
   },
 
@@ -103,6 +116,6 @@ function enable() {
 }
 
 function disable() {
-  twMenu.stop();
-  twMenu.destroy();
+  biMenu.stop();
+  biMenu.destroy();
 }
