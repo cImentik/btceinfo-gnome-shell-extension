@@ -76,12 +76,7 @@ const BTCeInfoIndicator = new Lang.Class({
   },
 
   _refreshUI: function (data) {
-    let change = 0.0;
-    // if(_prev){
-      change = ((parseFloat(data.ppc_usd.last)-_prev)/_prev)*100;
-    // } else {
-      // _prev = parseFloat(data.nmc_usd.last);
-    // }
+    let change = ((parseFloat(data.ppc_usd.last)-_prev)/_prev)*100;
     // global.log(change);
     let txt = data.ppc_usd.last.toString();
     txt = '$' + txt.substring(0,4) + ' ' + change.toString().substring(0,4)+'%';
